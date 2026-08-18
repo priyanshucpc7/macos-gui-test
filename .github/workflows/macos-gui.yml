@@ -1,1 +1,57 @@
+name: Temporary macOS 26 GUI
 
+on:
+  workflow_dispatch:
+
+jobs:
+  macos:
+    runs-on: macos-26
+
+    timeout-minutes: 30
+
+    steps:
+      - name: Show macOS information
+        run: |
+          echo "===== macOS ====="
+          sw_vers
+
+          echo
+          echo "===== Architecture ====="
+          uname -m
+
+          echo
+          echo "===== User ====="
+          whoami
+
+          echo
+          echo "===== Home ====="
+          echo "$HOME"
+
+      - name: Check graphical session
+        run: |
+          echo "===== Environment ====="
+          env | grep -E '^(DISPLAY|HOME|USER|LOGNAME)=' || true
+
+          echo
+          echo "===== WindowServer ====="
+          ps aux | grep '[W]indowserver' || true
+
+          echo
+          echo "===== loginwindow ====="
+          ps aux | grep '[l]oginwindow' || true
+
+      - name: Test GUI application
+        run: |
+          echo "Opening Calculator..."
+          open -a Calculator || true
+
+          sleep 10
+
+          echo
+          echo "===== Calculator ====="
+          pgrep -fl Calculator || true
+
+      - name: Keep runner alive
+        run: |
+          echo "Runner will remain alive for testing."
+          sleep 300
